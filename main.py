@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 from utility.parse import parse_and_aggregate_flow_logs
 from utility.inputs import generate_lookup_table, read_protocol_table
-from utility.outputs import write_count_port_protocol, write_count_tags
+from utility.outputs import write_to_csv
 
 # Default file names to write outputs to
 DEFAULT_COUNT_FLOW_TAGS_FILE = "flow-tags-count.csv"
@@ -12,6 +12,7 @@ DEFAULT_COUNT_PORT_PROTOCOL_FILE = "port-protocol-count.csv"
 PROTOCOL_FILE_PATH = "resource/protocol-numbers.csv"
 
 FLOW_DEBUG_PRINT_INTERVAL = 5000
+
 
 def main():
     parser = ArgumentParser()
@@ -41,11 +42,13 @@ def main():
         args.flow_logs_file_path, lookup_table, protocol_table, FLOW_DEBUG_PRINT_INTERVAL)
 
     print(f"[Debug] Writing counted tags to file {args.tag_count_path}...")
-    write_count_tags(args.tag_count_path, aggregates["count_tags"])
+    write_to_csv(args.tag_count_path,
+                ["Tag", "Count"], aggregates["count_tags"])
 
     print(f"[Debug] Writing counted ports and protocols to file {args.port_protocol_count_path}")
-    write_count_port_protocol(
-        args.port_protocol_count_path, aggregates["count_port_and_protocol"])
+    write_to_csv(args.port_protocol_count_path, 
+                ["Port", "Protocol", "Count"], aggregates["count_port_and_protocol"])
+
 
 if __name__ == "__main__":
     main()

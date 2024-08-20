@@ -1,6 +1,6 @@
 from utility.inputs import generate_lookup_table, read_protocol_table
 from utility.parse import parse_and_aggregate_flow_logs
-from utility.outputs import write_count_port_protocol, write_count_tags
+from utility.outputs import write_to_csv
 
 import csv
 import random
@@ -69,15 +69,14 @@ def test():
 
     print(
         f"[Debug] Writing counted tags to file {COUNT_TAGS_CREATION_PATH}...")
-    write_count_tags(COUNT_TAGS_CREATION_PATH, aggregates["count_tags"])
+    write_to_csv(COUNT_TAGS_CREATION_PATH,
+                ["Tag", "Count"], aggregates["count_tags"])
 
-    print(
-        f"[Debug] Writing counted ports and protocols to file {COUNT_PROTOCOL_PORT_PATH}")
-    write_count_port_protocol(
-        COUNT_PROTOCOL_PORT_PATH, aggregates["count_port_and_protocol"])
-    
-    print(
-        f"\nTime taken to aggregate {FLOW_LOGS_TO_GENERATE} flow records with {LOOKUP_RECORDS_TO_GENERATE} lookup records: {aggregate_end_time - aggregate_start_time}")
+    print(f"[Debug] Writing counted ports and protocols to file {COUNT_PROTOCOL_PORT_PATH}")
+    write_to_csv(COUNT_PROTOCOL_PORT_PATH,
+                ["Port", "Protocol", "Count"], aggregates["count_port_and_protocol"])
+
+    print(f"\nTime taken to aggregate {FLOW_LOGS_TO_GENERATE} flow records with {LOOKUP_RECORDS_TO_GENERATE} lookup records: {aggregate_end_time - aggregate_start_time}")
 
 
 if __name__ == "__main__":

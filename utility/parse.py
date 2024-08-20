@@ -2,17 +2,26 @@ def parse_and_aggregate_flow_logs(flow_logs_file_path, lookup_table, protocol_ta
     """
         Find count of tags and ports & protocols from flow logs.
     """
+    idx_to_value_mapper = {
+        6: "dst_port",
+        7: "protocol"
+    }
+
     def parse_flow_log(index, flow_log):
         """
             Get destination port and protocol from a single log
         """
-        # We nest this function for better performance by removing the need to pass protocol_table on every function call
+        # We nest this function for better performance by removing the need to pass protocol_table and idx_to_value_mapper
+        # on every function call
+
         flow_log = flow_log.split()
         assert len(
             flow_log) == 14, f"[Incorrect Format] Flow Log row {index+1} does not have 14 columns: {flow_log}"
-        dst_port = flow_log[6]
-        protocol = protocol_table[flow_log[7]]
-        return dst_port, protocol
+
+        parsed_flow_log = {
+            value_type: flow_log[idx].strip() for idx, value_type in idx_to_value_mapper.items()
+        }
+        return parsed_flow_log
 
     aggregates = {
         "count_tags": {},
@@ -29,7 +38,10 @@ def parse_and_aggregate_flow_logs(flow_logs_file_path, lookup_table, protocol_ta
             if not flow_log:
                 continue
 
-            dst_port, protocol = parse_flow_log(idx, flow_log)
+            parsed_flow_log = parse_flow_log(idx, flow_log)
+
+            protocol = protocol_table[parsed_flow_log["protocol"]]
+            dst_port = parsed_flow_log["dst_port"]
 
             # Lookup tag from lookup table, and if not found, mark Untagged
             tag = lookup_table.get(dst_port.lower(), {}).get(
