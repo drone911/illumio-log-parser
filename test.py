@@ -32,7 +32,7 @@ def test():
     current_timestamp = datetime.now()
     print(f"[Debug] Started test at {current_timestamp}")
     LOOKUP_RECORDS_TO_GENERATE = 10000
-    # Close to 15 MB of logs
+    # Close to 10 MB of logs
     FLOW_LOGS_TO_GENERATE = 100000
 
     LOOKUP_FILE_CREATION_PATH = f"test-outputs/lookup-test-{current_timestamp.strftime('%Y-%m-%d-%H-%M-%S')}.csv"
