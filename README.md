@@ -1,7 +1,7 @@
 # illumio-log-parser
 
 ## Assumptions
-1. As instructed, the program expects flow logs and lookup files as ascii files with the lookup file being in csv format.
+1. As instructed, the program expects flow logs and lookup files as ascii files with the lookup file in csv format.
 2. Since the log files contain protocol number, I have mapped the number to their protocols using IANA specification (as per aws) present in ```resource``` folder.
 3. As instructed, I have used destination port and protocol to count tags and ports+protocols.
 
